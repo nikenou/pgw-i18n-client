@@ -10,6 +10,11 @@ A dashboard template built with Next.js, Tailwind CSS, and React Intl. This temp
 
 View a working [demo](https://nextjs-i18n-dashboard-template.vercel.app/).
 
+## Requirements
+
+- Node.js >=20.17.0
+- npm >=10.8.2
+
 ## Getting Started
 
 Run this Next.js app on your local machine by following the instructions below:
