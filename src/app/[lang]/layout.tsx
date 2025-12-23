@@ -65,19 +65,9 @@ interface Props {
 export default async function Root({ params, children }: Props) {
   const user = await getUser();
   const global = await getGlobal(params.lang);
-
+  console.log('global', global);
   // TODO: CREATE A CUSTOM ERROR PAGE
   if (!global.data) return null;
-
-  const { navbar, footer } = global.data.attributes;
-
-  const navbarLogoUrl = getStrapiMedia(
-    navbar.navbarLogo.logoImg.data?.attributes.url
-  );
-
-  const footerLogoUrl = getStrapiMedia(
-    footer.footerLogo.logoImg.data?.attributes.url
-  );
 
   return (
     <html lang={params.lang}>
