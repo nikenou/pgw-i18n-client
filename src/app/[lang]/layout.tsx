@@ -1,19 +1,14 @@
-import type { Metadata } from "next";
-import "./globals.css";
 import { getStrapiMedia, getStrapiURL } from "./utils/api-helpers";
 import { fetchAPI } from "./utils/fetch-api";
 
-// import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar";
 import Content from "@/components/Content";
-// import Sidebar from "@/components/Sidebar";
+import Sidebar from "@/components/Sidebar";
 
 import { getUser } from "@/lib/data";
 import { Locale } from "@/lib/definitions";
 
 import { i18n } from "../../../i18n-config";
-import Banner from "./components/Banner";
-import Footer from "./components/Footer";
-import Navbar from "./components/Navbar";
 import {FALLBACK_SEO} from "@/app/[lang]/utils/constants";
 
 import "@/app/globals.css";
@@ -62,37 +57,36 @@ export async function generateMetadata({ params } : { params: {lang: string}}): 
 }
 
 interface Props {
-  readonly children: React.ReactNode;
-  readonly params: { lang: string };
+  params: { lang: Locale };
+  children: React.ReactNode;
 }
 
 export default async function Root({ params, children }: Props) {
   const user = await getUser();
   const global = await getGlobal(params.lang);
 
-    // TODO: CREATE A CUSTOM ERROR PAGE
-    if (!global.data) return null;
-    const { notificationBanner, navbar, footer } = global.data.attributes;
+  // TODO: CREATE A CUSTOM ERROR PAGE
+  if (!global.data) return null;
 
-    const navbarLogoUrl = getStrapiMedia(
-      navbar.navbarLogo.logoImg.data?.attributes.url
-    );
+  const { navbar, footer } = global.data.attributes;
 
-    const footerLogoUrl = getStrapiMedia(
-      footer.footerLogo.logoImg.data?.attributes.url
-    );
+  const navbarLogoUrl = getStrapiMedia(
+    navbar.navbarLogo.logoImg.data?.attributes.url
+  );
+
+  const footerLogoUrl = getStrapiMedia(
+    footer.footerLogo.logoImg.data?.attributes.url
+  );
 
   return (
     <html lang={params.lang}>
-      <body className="relative min-h-screen overflow-y-auto bg-gray-50">
-        <Navbar
-          links={navbar.links}
-          logoUrl={navbarLogoUrl}
-          logoText={navbar.navbarLogo.logoText}
-        />
+    <body className="relative min-h-screen overflow-y-auto bg-gray-50">
+    <Navbar locale={params.lang} user={user} />
 
-        <Content>{children}</Content>
-      </body>
+    <Content>{children}</Content>
+
+    <Sidebar locale={params.lang} />
+    </body>
     </html>
   );
 }
