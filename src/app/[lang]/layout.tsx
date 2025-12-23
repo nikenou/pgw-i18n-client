@@ -4,7 +4,7 @@ import { getStrapiMedia, getStrapiURL } from "./utils/api-helpers";
 import { fetchAPI } from "./utils/fetch-api";
 
 // import Navbar from "@/components/Navbar";
-// import Content from "@/components/Content";
+import Content from "@/components/Content";
 // import Sidebar from "@/components/Sidebar";
 
 import { getUser } from "@/lib/data";
@@ -90,7 +90,7 @@ export default async function Root({ params, children }: Props) {
           logoUrl={navbarLogoUrl}
           logoText={navbar.navbarLogo.logoText}
         />
-
+        <Content>{children}</Content>
       </body>
     </html>
   );
