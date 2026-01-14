@@ -1,8 +1,8 @@
 import LangRedirect from './components/LangRedirect';
-import { BlockRenderer, PageBlock } from './components/BlockRender';
+import { PageBlockRender, PageBlock } from './components/PageBlockRender';
 
 // import componentResolver from './utils/component-resolver';
-import {getPageBySlug} from "@/app/[lang]/utils/get-page-by-slug";
+import {getPageBySlug} from "@/utils/get-page-by-slug";
 import pagePopulate from '@/lib/populate/page';
 
 export default async function RootRoute({params}: { params: { lang: string } }) {
@@ -12,12 +12,11 @@ export default async function RootRoute({params}: { params: { lang: string } }) 
         throw new Error(
           'Missing or invalid credentials. Have you created an access token using the Strapi admin panel? http://localhost:1337/admin/'
         )
-
-      if (page.data.length == 0 && params.lang !== 'en') return <LangRedirect />
+      console.log('page', page)
       if (page.data.length === 0) return null
-      const contentSections = page.data[0].attributes.contentSections;
+      const contentSections = page.data[0].contentSections;
       return contentSections.map((section: PageBlock) => (
-        <BlockRenderer key={section.id} section={section} />
+        <PageBlockRender key={section.id} section={section} />
       ))
       /* return contentSections.map((section: any, index: number) =>
         componentResolver(section, index)

@@ -21,11 +21,11 @@ const blocks: Record<
 
 
 
-function BlockRenderer({ section }: { section: PageBlock }) {
+function PageBlockRender({ section }: { section: PageBlock }) {
   const BlockComponent = blocks[section.__component];
   return BlockComponent ? <BlockComponent section={section} /> : null;
 }
 
 
-export { BlockRenderer };
+export { PageBlockRender };
 export type { PageBlock };

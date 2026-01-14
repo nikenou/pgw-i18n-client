@@ -1,5 +1,5 @@
 import ArticleSelect from "@/app/[lang]/components/ArticleSelect";
-import { fetchAPI } from "@/app/[lang]/utils/fetch-api";
+import { fetchAPI } from "@/utils/fetch-api";
 
 async function fetchSideMenuData(filter: string) {
   try {
@@ -37,21 +37,17 @@ async function fetchSideMenuData(filter: string) {
 
 interface Category {
   id: number;
-  attributes: {
-    name: string;
-    slug: string;
-    articles: {
-      data: Array<{}>;
-    };
+  name: string;
+  slug: string;
+  articles: {
+    data: Array<{}>;
   };
 }
 
 interface Article {
   id: number;
-  attributes: {
-    title: string;
-    slug: string;
-  };
+  title: string;
+  slug: string;
 }
 
 interface Data {
@@ -71,7 +67,7 @@ export default async function LayoutRoute({
 }) {
   const { category } = params;
   const { categories, articles } = (await fetchSideMenuData(category)) as Data;
-
+  console.log(22, categories, articles)
   return (
     <section className="container p-8 mx-auto space-y-6 sm:space-y-12">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-2 lg:gap-4">
@@ -107,12 +103,10 @@ export async function generateStaticParams() {
 
   return articleResponse.data.map(
     (article: {
-      attributes: {
+      slug: string;
+      category: {
         slug: string;
-        category: {
-          slug: string;
-        };
       };
-    }) => ({ slug: article.attributes.slug, category: article.attributes.slug })
+    }) => ({ slug: article.slug, category: article.slug })
   );
 }

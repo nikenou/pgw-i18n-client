@@ -1,4 +1,4 @@
-import { fetchAPI } from '@/app/[lang]/utils/fetch-api';
+import { fetchAPI } from '@/utils/fetch-api';
 import Post from '@/app/[lang]/views/post';
 import type { Metadata } from 'next';
 
@@ -9,18 +9,10 @@ async function getPostBySlug(slug: string) {
         filters: { slug },
         populate: {
             cover: { fields: ['url'] },
-            authorsBio: { populate: '*' },
+            author: { populate: '*' },
             category: { fields: ['name'] },
             blocks: { 
-                populate: {
-                    '__component': '*', 
-                    'files': '*',
-                    'file': '*',
-                    'url': '*',
-                    'body': '*',
-                    'title': '*',
-                    'author': '*',
-                }
+                populate: '*'
             },
         },
     };
@@ -43,7 +35,8 @@ async function getMetaData(slug: string) {
 
 export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
     const meta = await getMetaData(params.slug);
-    const metadata = meta[0].attributes.seo;
+    console.log('meta', meta);
+    const metadata = meta[0].seo;
 
     return {
         title: metadata.metaTitle,
@@ -54,6 +47,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function PostRoute({ params }: { params: { slug: string } }) {
     const { slug } = params;
     const data = await getPostBySlug(slug);
+    console.log('getPostBySlug', data);
     if (data.data.length === 0) return <h2>no post found</h2>;
     return <Post data={data.data[0]} />;
 }
@@ -77,12 +71,10 @@ export async function generateStaticParams() {
 
     return articleResponse.data.map(
         (article: {
-            attributes: {
+            slug: string;
+            category: {
                 slug: string;
-                category: {
-                    slug: string;
-                };
             };
-        }) => ({ slug: article.attributes.slug, category: article.attributes.slug })
+        }) => ({ slug: article.slug, category: article.slug })
     );
 }

@@ -1,5 +1,5 @@
 import PageHeader from '@/app/[lang]/components/PageHeader';
-import { fetchAPI } from '@/app/[lang]/utils/fetch-api';
+import { fetchAPI } from '@/utils/fetch-api';
 import ProductList from '@/app/[lang]/views/product-list';
 
 async function fetchPostsByCategory(filter: string) {
@@ -18,7 +18,7 @@ async function fetchPostsByCategory(filter: string) {
                 category: {
                     populate: '*',
                 },
-                authorsBio: {
+                author: {
                     populate: '*',
                 },
             },
@@ -38,7 +38,7 @@ export default async function CategoryRoute({ params }: { params: { category: st
     //TODO: CREATE A COMPONENT FOR THIS
     if (data.length === 0) return <div>Not Posts In this category</div>;
 
-    const { name, description } = data[0]?.attributes.category.data.attributes;
+    const { name, description } = data[0]?.category;
 
     return (
         <div>

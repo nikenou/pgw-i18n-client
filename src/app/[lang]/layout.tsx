@@ -1,21 +1,17 @@
 import type { Metadata } from "next";
-import { getStrapiMedia, getStrapiURL } from "./utils/api-helpers";
-import { fetchAPI } from "./utils/fetch-api";
-
-import Navbar from "./components/Navbar";
+import Navbar from "@/components/Navbar";
+// import Content from "@/components/Content";
 import Footer from "./components/Footer";
-// import Navbar from "@/components/Navbar";
-import Content from "@/components/Content";
-import Sidebar from "@/components/Sidebar";
 
 import { getUser } from "@/lib/data";
 import { Locale } from "@/lib/definitions";
+import { getStrapiMedia, getStrapiURL } from "../../utils/api-helpers";
+import { fetchAPI } from "@/utils/fetch-api";
 
 import { i18n } from "../../../i18n-config";
-import {FALLBACK_SEO} from "@/app/[lang]/utils/constants";
+import {FALLBACK_SEO} from "@/utils/constants";
 
-import "./globals.css";
-// import "@/app/globals.css";
+import "@/app/globals.css";
 
 async function getGlobal(lang: string): Promise<any> {
   const token = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
@@ -27,9 +23,8 @@ async function getGlobal(lang: string): Promise<any> {
 
   const urlParamsObject = {
     populate: [
-      "metadata.shareImage",
+      "metadata",
       "favicon",
-      "notificationBanner.link",
       "navbar.links",
       "navbar.navbarLogo.logoImg",
       "footer.footerLogo.logoImg",
@@ -38,18 +33,20 @@ async function getGlobal(lang: string): Promise<any> {
       "footer.socialLinks",
       "footer.categories",
     ],
-    locale: lang,
+    // locale: lang,
   };
   return await fetchAPI(path, urlParamsObject, options);
 }
+
+// 获取翻译
 
 export async function generateMetadata({ params } : { params: {lang: string}}): Promise<Metadata> {
   const meta = await getGlobal(params.lang);
 
   if (!meta.data) return FALLBACK_SEO;
 
-  const { metadata, favicon } = meta.data.attributes;
-  const { url } = favicon.data.attributes;
+  const { metadata, favicon } = meta.data;
+  const { url } = favicon;
 
   return {
     title: metadata.metaTitle,
@@ -60,54 +57,50 @@ export async function generateMetadata({ params } : { params: {lang: string}}): 
   };
 }
 
-export default async function RootLayout({
-  children,
-  params,
-}: {
-  readonly children: React.ReactNode;
-  readonly params: { lang: string };
-}) {
+interface Props {
+  params: { lang: Locale };
+  children: React.ReactNode;
+}
+
+export default async function RootLayout({ params, children }: Props) {
   const user = await getUser();
   const global = await getGlobal(params.lang);
-
+  
   // TODO: CREATE A CUSTOM ERROR PAGE
   if (!global.data) return null;
-
-  const { navbar, footer } = global.data.attributes;
+  const { navbar, footer } = global.data;
 
   const navbarLogoUrl = getStrapiMedia(
-    navbar.navbarLogo.logoImg.data?.attributes.url
+    navbar.navbarLogo.logoImg.url
   );
 
   const footerLogoUrl = getStrapiMedia(
-    footer.footerLogo.logoImg.data?.attributes.url
+    footer.footerLogo.logoImg.url
   );
 
   return (
     <html lang={params.lang}>
-    <body className="relative min-h-screen overflow-y-auto bg-gray-50">
-    {/*<Navbar locale={params.lang} user={user} />*/}
-      <Navbar
-        links={navbar.links}
-        logoUrl={navbarLogoUrl}
-        logoText={navbar.navbarLogo.logoText}
-      />
+      <body className="relative min-h-screen overflow-y-auto bg-gray-50">
+        <Navbar 
+          locale={params.lang}
+          links={navbar.links}
+          logoUrl={navbarLogoUrl}
+          logoText={navbar.navbarLogo.logoText}
+          user={user} 
+        />
 
-      {/*<Content>{children}</Content>*/}
-
-      <main className="dark:bg-black dark:text-gray-100 min-h-screen">
-        {children}
-      </main>
-
-      <Footer
-        logoUrl={footerLogoUrl}
-        logoText={footer.footerLogo.logoText}
-        menuLinks={footer.menuLinks}
-        categoryLinks={footer.categories.data}
-        legalLinks={footer.legalLinks}
-        socialLinks={footer.socialLinks}
-      />
-    </body>
+        <main className="dark:bg-black dark:text-gray-100 min-h-screen">
+          {children}
+        </main>
+        <Footer
+          logoUrl={footerLogoUrl}
+          logoText={footer.footerLogo.logoText}
+          menuLinks={footer.menuLinks}
+          categoryLinks={footer.categories}
+          legalLinks={footer.legalLinks}
+          socialLinks={footer.socialLinks}
+        />
+      </body>
     </html>
   );
 }

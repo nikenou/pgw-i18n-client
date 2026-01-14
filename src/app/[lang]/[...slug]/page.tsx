@@ -1,12 +1,12 @@
 import {Metadata} from "next";
-import {getPageBySlug} from "@/app/[lang]/utils/get-page-by-slug";
-import {FALLBACK_SEO} from "@/app/[lang]/utils/constants";
-import componentResolver from "../utils/component-resolver";
-
+import {getPageBySlug} from "@/utils/get-page-by-slug";
+import {FALLBACK_SEO} from "@/utils/constants";
+import componentResolver from "../../../utils/component-resolver";
+import { Locale } from "@/lib/definitions";
 
 type Props = {
     params: {
-        lang: string,
+        lang: Locale,
         slug: string
     }
 }

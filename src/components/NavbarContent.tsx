@@ -3,37 +3,91 @@
 import React, { useState, useCallback, useRef, forwardRef } from "react";
 import { IntlProvider, FormattedMessage } from "react-intl";
 import clsx from "clsx";
+import { Dialog } from "@headlessui/react";
 
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { User, Locale } from "@/lib/definitions";
+
+import Logo from "./Logo";
+
+interface NavLink {
+  id: number;
+  url: string;
+  newTab: boolean;
+  text: string;
+}
 
 interface Props {
   user: User;
   locale: Locale;
+  links: Array<NavLink>;
+  logoUrl: string | null;
+  logoText: string | null;
   messages: Record<string, string>;
 }
 
-export default function NavbarContent({ user, locale, messages }: Props) {
+interface MobileNavLink extends NavLink {
+  closeMenu: () => void;
+}
+
+function NavLink({ url, text }: NavLink) {
+  const path = usePathname();
+
+  return (
+    <li className="flex">
+      <Link
+        href={url}
+        className={`flex items-center mx-4 -mb-1 border-b-2 dark:border-transparent ${
+          path === url && "dark:text-violet-400 dark:border-violet-400"
+        }}`}
+      >
+        {text}
+      </Link>
+    </li>
+  );
+}
+
+function MobileNavLink({ url, text, closeMenu }: MobileNavLink) {
+  const path = usePathname();
+  const handleClick = () => {
+    closeMenu();
+  };
+  return (
+    <span className="flex">
+      <Link
+        href={url}
+        onClick={handleClick}
+        className={`-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-100 hover:bg-gray-900 ${
+          path === url && "dark:text-violet-400 dark:border-violet-400"
+        }}`}
+      >
+        {text}
+      </Link>
+    </span>
+  );
+}
+
+export default function NavbarContent({ user, locale, links, logoUrl, logoText, messages }: Props) {
   const pathname = usePathname();
 
   const appMenuRef = useRef(null);
-  const userMenuRef = useRef(null);
   const langSwitcherMenuRef = useRef(null);
 
   const [appMenuOpen, setAppMenuOpen] = useState(false);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [langSwitcherMenuOpen, setLangSwitcherMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const closeMenu = () => {
+    setMobileMenuOpen(false);
+  };
 
   useOutsideClick(appMenuRef, () => {
     setAppMenuOpen(false);
-  });
-
-  useOutsideClick(userMenuRef, () => {
-    setUserMenuOpen(false);
   });
 
   useOutsideClick(langSwitcherMenuRef, () => {
@@ -44,10 +98,6 @@ export default function NavbarContent({ user, locale, messages }: Props) {
     setAppMenuOpen(!appMenuOpen);
   };
 
-  const handleUserMenuClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    setUserMenuOpen(!userMenuOpen);
-  };
-
   const handleLangSwitcherMenuClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     setLangSwitcherMenuOpen(!langSwitcherMenuOpen);
   };
@@ -55,130 +105,117 @@ export default function NavbarContent({ user, locale, messages }: Props) {
   return (
     <IntlProvider locale={locale} messages={messages}>
       <nav className="sticky top-0 left-0 z-50 w-full bg-white border-b border-gray-200">
-        <div className="h-16 flex items-center justify-between">
-          <div className="flex items-center mx-2">
-            <div className="relative mx-1 lg:hidden">
-              <button
-                type="button"
-                className="rounded-full p-1 text-gray-500 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
-                id="app-menu-button"
-                aria-haspopup="true"
-                aria-expanded={appMenuOpen}
-                onClick={handleAppMenuClick}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-                </svg>
-              </button>
-
-              {appMenuOpen && (
-                <Menu ref={appMenuRef} aria-labelledby="app-menu-button" align="left">
-                  <MenuItem href={`/${locale}/home`}>
-                    <FormattedMessage id="common.navigation.home" />
-                  </MenuItem>
-                  <MenuItem href={`/${locale}/reports`}>
-                    <FormattedMessage id="common.navigation.reports" />
-                  </MenuItem>
-                  <MenuItem href={`/${locale}/discover`}>
-                    <FormattedMessage id="common.navigation.discover" />
-                  </MenuItem>
-                </Menu>
-              )}
+        <div className="h-16 flex w-full items-center">
+          {/* B区域：Logo模块（固定在左侧） */}
+          <div className="flex-shrink-0">
+            <div className="mx-2">
+              <Logo src={logoUrl}>
+                {logoText && <h2 className="text-2xl font-bold">{logoText}</h2>}
+              </Logo>
             </div>
           </div>
 
-          <div className="flex items-center mx-2">
-            <div className="relative mx-1">
-              <button
-                type="button"
-                className="rounded-full p-1 text-gray-500 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
-                id="lang-switcher-menu-button"
-                aria-haspopup="true"
-                aria-expanded={langSwitcherMenuOpen}
-                onClick={handleLangSwitcherMenuClick}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"
-                  />
-                </svg>
-              </button>
+          {/* C区域：右侧区域（菜单+图标） */}
+          <div className="flex-grow h-full">
+            <div className="flex items-center justify-end h-full">
+              <div className="flex items-center">
+                {/* 左侧：导航菜单（可扩展） */}
+                <div className="hidden lg:flex">
+                  <ul className="flex space-x-3">
+                    {links && links.map((item: NavLink) => (
+                      <NavLink key={item.id} {...item} />
+                    ))}
+                  </ul>
+                </div>
 
-              {langSwitcherMenuOpen && (
-                <Menu ref={langSwitcherMenuRef} aria-labelledby="lang-switcher-menu-button">
-                  <MenuItem href={`/en/${pathname.split("/").slice(2).join("/")}`} active={locale === "en"}>
-                    <FormattedMessage id="common.language-switcher" values={{ locale: "en" }} />
-                  </MenuItem>
-                  <MenuItem href={`/zh/${pathname.split("/").slice(2).join("/")}`} active={locale === "zh"}>
-                    <FormattedMessage id="common.language-switcher" values={{ locale: "zh" }} />
-                  </MenuItem>
-                </Menu>
-              )}
-            </div>
+                {/* 右侧：语言切换器和移动端菜单按钮（固定在最右边） */}
+                <div className="flex items-center space-x-2">
+                  {/* 移动端菜单按钮 */}
+                  <button
+                    className="p-2 lg:hidden"
+                    onClick={() => setMobileMenuOpen(true)}
+                  >
+                    <Bars3Icon className="h-7 w-7 text-gray-100" aria-hidden="true" />
+                  </button>
 
-            <div className="relative mx-1">
-              <button
-                type="button"
-                className="rounded-full p-1 text-gray-500 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
-              >
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth="1.5"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-                  />
-                </svg>
-              </button>
-            </div>
+                  {/* 移动端对话框 */}
+                  <Dialog
+                    as="div"
+                    className="lg:hidden"
+                    open={mobileMenuOpen}
+                    onClose={setMobileMenuOpen}
+                  >
+                    <div className="fixed inset-0 z-40 bg-gray-600 bg-opacity-75" />
+                    <Dialog.Panel className="fixed inset-y-0 rtl:left-0 ltr:right-0 z-50 w-full overflow-y-auto bg-gray-800 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-inset sm:ring-white/10">
+                      <div className="flex items-center justify-between">
+                        <a href="#" className="-m-1.5 p-1.5">
+                          <span className="sr-only">Strapi</span>
+                          {logoUrl && <img className="h-8 w-auto" src={logoUrl} alt="" />}
+                        </a>
+                        <button
+                          type="button"
+                          className="-m-2.5 rounded-md p-2.5 text-white"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <span className="sr-only">Close menu</span>
+                          <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                        </button>
+                      </div>
+                      <div className="mt-6 flow-root">
+                        <div className="-my-6 divide-y divide-gray-700">
+                          <div className="space-y-2 py-6">
+                            {links && links.map((item) => (
+                              <MobileNavLink
+                                key={item.id}
+                                closeMenu={closeMenu}
+                                {...item}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </Dialog.Panel>
+                  </Dialog>
 
-            <div className="relative mx-1">
-              <button
-                type="button"
-                className="rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
-                id="user-menu-button"
-                aria-haspopup="true"
-                aria-expanded={userMenuOpen}
-                onClick={handleUserMenuClick}
-              >
-                <Image src={user.profileImage} alt="Profile image" className="rounded-full" width={24} height={24} />
-              </button>
+                  {/* 语言切换器按钮 */}
+                  <div className="relative">
+                    <button
+                      type="button"
+                      className="rounded-full p-1 text-gray-500 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-600"
+                      id="lang-switcher-menu-button"
+                      aria-haspopup="true"
+                      aria-expanded={langSwitcherMenuOpen}
+                      onClick={handleLangSwitcherMenuClick}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="size-6"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418"
+                        />
+                      </svg>
+                    </button>
 
-              {userMenuOpen && (
-                <Menu ref={userMenuRef} aria-labelledby="user-menu-button">
-                  <MenuItem href="#">
-                    <FormattedMessage id="common.user-menu.your-profile" />
-                  </MenuItem>
-                  <MenuItem href="#">
-                    <FormattedMessage id="common.user-menu.settings" />
-                  </MenuItem>
-                  <MenuItem href="#">
-                    <FormattedMessage id="common.user-menu.sign-out" />
-                  </MenuItem>
-                </Menu>
-              )}
+                    {langSwitcherMenuOpen && (
+                      <Menu ref={langSwitcherMenuRef} aria-labelledby="lang-switcher-menu-button">
+                        <MenuItem href={`/en/${pathname.split("/").slice(2).join("/")}`} active={locale === "en"}>
+                          <FormattedMessage id="common.language-switcher" values={{ locale: "en" }} />
+                        </MenuItem>
+                        <MenuItem href={`/zh/${pathname.split("/").slice(2).join("/")}`} active={locale === "zh"}>
+                          <FormattedMessage id="common.language-switcher" values={{ locale: "zh" }} />
+                        </MenuItem>
+                      </Menu>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useCallback } from "react";
-import { fetchAPI } from "../utils/fetch-api";
+import { fetchAPI } from "../../../utils/fetch-api";
 
 import Loader from "../components/Loader";
 import ProductList from "../views/product-list";
@@ -61,7 +61,7 @@ export default function Profile() {
         populate: {
           cover: { fields: ["url"] },
           category: { populate: "*" },
-          authorsBio: {
+          author: {
             populate: "*",
           },
         },

@@ -1,17 +1,12 @@
 "use client";
 import { Slide } from "react-slideshow-image";
-import { getStrapiMedia } from "../utils/api-helpers";
+import { getStrapiMedia } from "../../../utils/api-helpers";
 import Image from "next/image";
 
 interface Image {
-  id: number;
-  data: {
-    attributes: {
-      alternativeText: string | null;
-      caption: string | null;
-      url: string;
-    };
-  }
+  alternativeText: string | null;
+  caption: string | null;
+  url: string;
 }
 
 interface Slider {
@@ -31,9 +26,9 @@ export interface SliderShowProps {
 export function ImageSliders({ section }: {section: SliderShowProps} ) {
   return (
     <div className="slide-container">
-      {<Slide slidesToScroll={3} slidesToShow={3} indicators={true}>
+      {<Slide slidesToScroll={1} slidesToShow={3} indicators={true}>
         {section.sliders.map((slider: Slider, index) => {
-          const imageUrl = getStrapiMedia(slider.image.data.attributes.url);
+          const imageUrl = getStrapiMedia(slider.image.url);
           return (
             <div key={index}>
               {imageUrl && <Image className="w-full h-96 object-cover" height={400} width={600} alt="alt text" src={imageUrl} />}

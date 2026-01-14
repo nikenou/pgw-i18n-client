@@ -1,15 +1,15 @@
 {
-  "common.language-switcher": "{locale, select, en {English} de {Deutsch} fr {Français} other {Unknown}}",
-  "common.navigation.discover": "Découvrir",
-  "common.navigation.home": "Accueil",
-  "common.navigation.reports": "Rapports",
-  "common.user-menu.settings": "Paramètres",
-  "common.user-menu.sign-out": "Déconnexion",
-  "common.user-menu.your-profile": "Votre profil",
-  "page.discover.deploy-on-vercel.subtitle": "Expérimentez des déploiements ultra-rapides et une performance supérieure pour vos projets Next.js sans aucune configuration.",
-  "page.discover.deploy-on-vercel.title": "Déployer Next.js sur Vercel",
-  "page.home.activities": "Activités",
-  "page.home.activity": "{action, select, COMMENT {Tâche commentée} ACTIVATE {Travail activé} STOP {Travail arrêté} other {Activité inconnue}}",
-  "page.home.team": "Équipe",
-  "page.reports.no-data": "Aucun rapport n'a été trouvé."
+  "common.language-switcher": "{locale, select, en {English} zh {中文} other {Unknown}}",
+  "common.navigation.discover": "发现",
+  "common.navigation.home": "主页",
+  "common.navigation.reports": "报告",
+  "common.user-menu.settings": "设置",
+  "common.user-menu.sign-out": "退出登录",
+  "common.user-menu.your-profile": "您的个人资料",
+  "page.discover.deploy-on-vercel.subtitle": "Experience lightning-fast deployments and superior performance for your Next.js projects with zero configuration.",
+  "page.discover.deploy-on-vercel.title": "Deploy Next.js on Vercel",
+  "page.home.activities": "活动",
+  "page.home.activity": "{action, select, COMMENT {评论任务} CREATE {创建新任务} UPDATE {更新已存在任务} COMPLETE {完成已存在任务} ACTIVATE {激活作业} STOP {停止作业} other {未知活动}}",
+  "page.home.team": "团队",
+  "page.reports.no-data": "暂无报告"
 }

@@ -1,5 +1,5 @@
 import { ReactElement, lazy, createElement, Suspense } from 'react';
-import Loader from '../components/Loader';
+import Loader from '../app/[lang]/components/Loader';
 
 export default function componentResolver(section: any, index: number) : ReactElement {
 
