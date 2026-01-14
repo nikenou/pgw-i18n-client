@@ -86,7 +86,6 @@ export default async function RootLayout({ params, children }: Props) {
           links={navbar.links}
           logoUrl={navbarLogoUrl}
           logoText={navbar.navbarLogo.logoText}
-          user={user} 
         />
 
         <main className="dark:bg-black dark:text-gray-100 min-h-screen">

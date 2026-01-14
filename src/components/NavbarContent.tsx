@@ -12,7 +12,7 @@ import { usePathname } from "next/navigation";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import useOutsideClick from "@/hooks/useOutsideClick";
-import { User, Locale } from "@/lib/definitions";
+import { Locale } from "@/lib/definitions";
 
 import Logo from "./Logo";
 
@@ -24,7 +24,6 @@ interface NavLink {
 }
 
 interface Props {
-  user: User;
   locale: Locale;
   links: Array<NavLink>;
   logoUrl: string | null;
@@ -73,7 +72,7 @@ function MobileNavLink({ url, text, closeMenu }: MobileNavLink) {
   );
 }
 
-export default function NavbarContent({ user, locale, links, logoUrl, logoText, messages }: Props) {
+export default function NavbarContent({ locale, links, logoUrl, logoText, messages }: Props) {
   const pathname = usePathname();
 
   const appMenuRef = useRef(null);

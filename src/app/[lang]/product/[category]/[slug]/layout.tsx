@@ -39,9 +39,7 @@ interface Category {
   id: number;
   name: string;
   slug: string;
-  articles: {
-    data: Array<{}>;
-  };
+  articles: Array<Article>;
 }
 
 interface Article {

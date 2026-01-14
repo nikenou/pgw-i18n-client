@@ -7,19 +7,11 @@ import '@szhsin/react-menu/dist/transitions/zoom.css';
 
 interface Category {
   id: number;
-  attributes: {
-    name: string;
-    slug: string;
-    parent?: {
-      data?: Category;
-    };
-    articles: {
-      data: Array<{}>;
-    };
-    children?: {
-      data: Array<Category>;
-    };
-  };
+  name: string;
+  slug: string;
+  parent?: Category;
+  articles: Array<{}>;
+  children?: Array<Category>;
 }
 
 function selectedFilter(current: string, selected: string) {
@@ -35,12 +27,12 @@ export default function CategoriesMenu({
 }) {
   // 递归组件：渲染分类菜单项及其子分类
   const CategoryMenuItem = ({ category }: { category: Category }) => {
-    const hasChildren = category.attributes.children && category.attributes.children.data && category.attributes.children.data.length > 0;
+    const hasChildren = category.children && category.children && category.children.length > 0;
     
-    if (hasChildren && category.attributes.children) {
+    if (hasChildren && category.children) {
       return (
-        <SubMenu label={<Link href={`/product/${category.attributes.slug}`}>{category.attributes.name}</Link>}>
-          {category.attributes.children.data.map((child) => (
+        <SubMenu label={<Link href={`/product/${category.slug}`}>{category.name}</Link>}>
+          {category.children.map((child) => (
             <CategoryMenuItem key={child.id} category={child} />
           ))}
         </SubMenu>
@@ -48,8 +40,8 @@ export default function CategoriesMenu({
     } else {
       return (
         <MenuItem>
-          <Link href={`/product/${category.attributes.slug}`}>
-            {category.attributes.name}
+          <Link href={`/product/${category.slug}`}>
+            {category.name}
           </Link>
         </MenuItem>
       );
@@ -58,29 +50,29 @@ export default function CategoriesMenu({
 
   // 为每个顶级分类创建独立的状态和ref的组件
   const CategoryWithMenu = ({ category }: { category: Category }) => {
-    const ref = useRef(null);
+    const ref = useRef<HTMLDivElement>(null) as any;
     const [menuState, toggle] = useMenuState({ transition: true });
     const { anchorProps, hoverProps } = useHover(menuState.state, toggle);
 
     return (
       <div key={category.id} ref={ref} {...anchorProps}>
         <Link
-          href={`/product/${category.attributes.slug}`}
+          href={`/product/${category.slug}`}
           className={selectedFilter(
-            category.attributes.slug,
+            category.slug,
             ''
           )}
         >
-          {category.attributes.name}
+          {category.name}
         </Link>
-        {category.attributes.children && category.attributes.children.data && category.attributes.children.data.length > 0 && (
+        {category.children && category.children && category.children.length > 0 && (
           <ControlledMenu
             {...hoverProps}
             {...menuState}
             anchorRef={ref}
             onClose={() => toggle(false)}
           >
-            {category.attributes.children.data.map((child) => (
+            {category.children.map((child) => (
               <CategoryMenuItem key={child.id} category={child} />
             ))}
           </ControlledMenu>
@@ -101,7 +93,7 @@ export default function CategoriesMenu({
             </Link>
           </div>
           {categories.map((category: Category) => {
-            if (category.attributes.parent?.data === null) {
+            if (category.parent === null) {
               return (
                 <CategoryWithMenu key={category.id} category={category} />
               );

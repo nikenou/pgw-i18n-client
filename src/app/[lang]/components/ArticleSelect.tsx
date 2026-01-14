@@ -62,7 +62,7 @@ export default function ArticleSelect({
           <ul className="ml-4 space-y-1 list-disc">
             {articles.map((article: Article) => {
               return (
-                <li>
+                <li key={article.id}>
                   <Link
                     rel="noopener noreferrer"
                     href={`/product/${params.category}/${article.slug}`}
