@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/Navbar";
 // import Content from "@/components/Content";
-import Footer from "./components/Footer";
+import Footer from "@/components/Footer";
 
 import { getUser } from "@/lib/data";
 import { Locale } from "@/lib/definitions";
