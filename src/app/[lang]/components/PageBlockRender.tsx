@@ -15,7 +15,7 @@ const blocks: Record<
     <Hero section={section as HeroProps} />
   ),
   "sections.image-sliders": ({ section }: { section: PageBlock }) => (
-    <ImageSliders section={section as SliderShowProps} />
+    <div></div>
   ),
 };
 
