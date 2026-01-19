@@ -1,4 +1,4 @@
-import LangRedirect from './components/LangRedirect';
+// import LangRedirect from './components/LangRedirect';
 import { PageBlockRender, PageBlock } from './components/PageBlockRender';
 
 // import componentResolver from './utils/component-resolver';
