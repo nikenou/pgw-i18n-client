@@ -88,9 +88,9 @@ export default async function RootLayout({ params, children }: Props) {
           logoText={navbar.navbarLogo.logoText}
         />
 
-        <main className="dark:bg-black dark:text-gray-100 min-h-screen">
+        {/* <main className="dark:bg-black dark:text-gray-100 min-h-screen">
           {children}
-        </main>
+        </main> */}
         <Footer
           logoUrl={footerLogoUrl}
           logoText={footer.footerLogo.logoText}

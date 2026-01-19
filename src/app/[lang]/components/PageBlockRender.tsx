@@ -1,8 +1,8 @@
-import Features from "./Features";
+// import Features from "./Features";
 import { Hero, HeroProps } from "./Hero";
-import FormSubmit from "./FormSubmit";
+// import FormSubmit from "./FormSubmit";
 import { ImageSliders, SliderShowProps } from "./ImageSliders";
-import LeadForm from "./LeadForm";
+// import LeadForm from "./LeadForm";
 
 type PageBlock = HeroProps | SliderShowProps;
 

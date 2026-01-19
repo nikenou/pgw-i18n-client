@@ -1,6 +1,6 @@
 "use client";
 import { Slide } from "react-slideshow-image";
-import { getStrapiMedia } from "../../../utils/api-helpers";
+import { getStrapiMedia } from "@/utils/api-helpers";
 import Image from "next/image";
 
 interface Image {
