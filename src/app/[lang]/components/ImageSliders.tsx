@@ -28,7 +28,7 @@ export function ImageSliders({ section }: {section: SliderShowProps} ) {
     <div className="slide-container">
       {<Slide slidesToScroll={1} slidesToShow={3} indicators={true}>
         {section.sliders.map((slider: Slider, index) => {
-          const imageUrl = getStrapiMedia(slider.image.url);
+          const imageUrl = getStrapiMedia(slider.image?.url || '');
           return (
             <div key={index}>
               {imageUrl && <Image className="w-full h-96 object-cover" height={400} width={600} alt="alt text" src={imageUrl} />}
