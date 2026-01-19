@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback } from "react";
 import { fetchAPI } from "../../../utils/fetch-api";
 
 import Loader from "../components/Loader";
-import ProductList from "../views/product-list";
+// import ProductList from "../views/product-list";
 import PageHeader from "../components/PageHeader";
 import CategoriesMenu from "@/app/[lang]/components/CategoriesMenu";
 
@@ -123,7 +123,7 @@ export default function Profile() {
     <div>
       <PageHeader heading="Our Products for You" text="Checkout Something Cool" />
       <CategoriesMenu categories={categoriesData} />
-      <ProductList data={productsData}>
+      {/* <ProductList data={productsData}>
         {meta!.pagination.start + meta!.pagination.limit <
           meta!.pagination.total && (
           <div className="flex justify-center">
@@ -136,7 +136,7 @@ export default function Profile() {
             </button>
           </div>
         )}
-      </ProductList>
+      </ProductList> */}
     </div>
   );
 }
