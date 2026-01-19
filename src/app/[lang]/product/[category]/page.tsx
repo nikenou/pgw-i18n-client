@@ -1,6 +1,6 @@
 import PageHeader from '@/app/[lang]/components/PageHeader';
 import { fetchAPI } from '@/utils/fetch-api';
-import ProductList from '@/app/[lang]/views/product-list';
+// import ProductList from '@/app/[lang]/views/product-list';
 
 async function fetchPostsByCategory(filter: string) {
     try {
@@ -43,7 +43,7 @@ export default async function CategoryRoute({ params }: { params: { category: st
     return (
         <div>
             <PageHeader heading={name} text={description} />
-            <ProductList data={data} />
+            {/* <ProductList data={data} /> */}
         </div>
     );
 }

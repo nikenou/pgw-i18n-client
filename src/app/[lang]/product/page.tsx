@@ -5,7 +5,7 @@ import { fetchAPI } from "../../../utils/fetch-api";
 import Loader from "../components/Loader";
 // import ProductList from "../views/product-list";
 import PageHeader from "../components/PageHeader";
-import CategoriesMenu from "@/app/[lang]/components/CategoriesMenu";
+// import CategoriesMenu from "@/app/[lang]/components/CategoriesMenu";
 
 interface Meta {
   pagination: {
@@ -122,7 +122,7 @@ export default function Profile() {
   return (
     <div>
       <PageHeader heading="Our Products for You" text="Checkout Something Cool" />
-      <CategoriesMenu categories={categoriesData} />
+      {/* <CategoriesMenu categories={categoriesData} /> */}
       {/* <ProductList data={productsData}>
         {meta!.pagination.start + meta!.pagination.limit <
           meta!.pagination.total && (

@@ -28,7 +28,7 @@ export default function Post({ data }: { data: Article }) {
 
     return (
         <article className="space-y-8 dark:bg-black dark:text-gray-50">
-            {imageUrl && (
+            {/* {imageUrl && (
                 <Image
                     src={imageUrl}
                     alt="article cover image"
@@ -55,7 +55,7 @@ export default function Post({ data }: { data: Article }) {
                         </p>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="dark:text-gray-100">
                 <p>{description}</p>
