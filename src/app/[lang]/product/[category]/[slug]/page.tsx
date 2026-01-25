@@ -47,7 +47,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
 export default async function PostRoute({ params }: { params: { slug: string } }) {
     const { slug } = params;
     const data = await getPostBySlug(slug);
-    console.log('getPostBySlug', data);
     if (data.data.length === 0) return <h2>no post found</h2>;
     return <Post data={data.data[0]} />;
 }

@@ -59,10 +59,6 @@ export default function Post({ data }: { data: Article }) {
 
             <div className="dark:text-gray-100">
                 <p>{description}</p>
-                {/* {data.blocks.map((section: any, index: number) => componentResolver(section, index))} */}
-                {data.blocks.map((section: PageBlock) => (
-                    <PostBlockRender key={section.id} section={section} />
-                ))}
             </div>
         </article>
     );
